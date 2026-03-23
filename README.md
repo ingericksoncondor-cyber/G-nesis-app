@@ -1,1 +1,1 @@
-# G-nesis-app
+# Genesis-app
