@@ -987,10 +987,18 @@ async function sendChat(){
   inp.value=''; inp.style.height='';
   addMsg('user',text); extractFacts(text); showTyping();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+    // Usamos el proxy cors-anywhere para evitar bloqueo del navegador
+    const PROXY = 'https://corsproxy.io/?url=';
+    const API_URL = 'https://api.anthropic.com/v1/messages';
+    const res=await fetch(PROXY + encodeURIComponent(API_URL),{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:1000,
+        model:'claude-haiku-4-5-20251001', max_tokens:1000,
         system:buildSystem(),
         messages:[
           ...(memory.chatHistory||[]).slice(-8).map(h=>[{role:'user',content:h.user},{role:'assistant',content:h.ai}]).flat(),
